@@ -1,7 +1,8 @@
 from config import DataBaseConfig, DocumentConfig
 
 from usecases.types import DataBasesTypesEnum
-from usecases.usecases import DataBaseStructureUseCase, CreateDocumentUseCase
+from usecases.db_cases import DataBaseStructureUseCase
+from usecases.document_cases import CreateDocumentUseCase
 from db.db_connector import DataBaseConnection
 from db.db_interface import DataBaseInterface
 
