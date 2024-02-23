@@ -1,0 +1,5 @@
+{{meta['created_dt']}}
+
+{% for table in data %}
+    {{table.table_name}}
+{% endfor %}
