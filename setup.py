@@ -1,13 +1,6 @@
 from setuptools import setup, find_packages
-import pkg_resources
-import pathlib
 
-with pathlib.Path('requirements.txt').open() as requirements_txt:
-    install_requires = [
-        str(requirement)
-        for requirement
-        in pkg_resources.parse_requirements(requirements_txt)
-    ]
+
 
 if __name__ == '__main__':
     setup(
@@ -16,5 +9,13 @@ if __name__ == '__main__':
         author='rodya',
         packages=find_packages(),
         include_package_data=True,
-        install_requires=install_requires
+        install_requires=[
+            'greenlet == 3.0.3',
+            'Jinja2 == 3.1.3',
+            'MarkupSafe == 2.1.5',
+            'psycopg2 == 2.9.9',
+            'python-dotenv == 1.0.0',
+            'SQLAlchemy == 2.0.27',
+            'typing_extensions == 4.9.0',
+        ]
     )
