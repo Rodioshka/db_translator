@@ -1,5 +1,28 @@
-{{meta['created_dt']}}
+| Пункт         | Значение                               |
+|---------------|----------------------------------------|
+| Описание      | Документ содержит описание базы данных |
+| Дата создания | {{meta['created_dt']}}                 |
 
+****
+# Навигация
 {% for table in data %}
-    {{table.table_name}}
+- [{{table.schema_name}}.{{table.table_name}}](#{{table.schema_name}}.{{table.table_name}})
 {% endfor %}
+****
+
+# Структура базы
+{% for table in data %}
+## <a id="{{table.table_name}}">{{table.schema_name}}.{{table.table_name}}</a>
+**Описание таблицы**:
+{{table.table_description}}
+****
+| № | Столбец | Описание | Тип данных | Может быть пустым | Внешний ключ |
+|---|---------|----------|------------|-------------------|--------------|
+{% for column in table.columns %}|{{loop.index}}|{{column.column_name}}|{{column.column_description}}|{{column.column_type}}|{{column.nullable}}|{% if column.ref_table  %}Ссылается на таблицу [{{column.ref_table}}](#{{column.ref_table}}) на поле {{column.ref_columns}} {% endif %}|
+{% endfor %}
+****
+{% endfor %}
+
+
+
+

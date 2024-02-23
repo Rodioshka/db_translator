@@ -15,7 +15,7 @@ class DataBaseStructureUseCase:
             'created_dt': datetime.datetime.now()
         }
 
-    def execute(self):
+    def execute(self) -> None:
         schemes = self.interface.get_schemes()
         data = list()
         for schema in schemes:
@@ -81,9 +81,17 @@ class DataBaseStructureUseCase:
 
 class CreateDocumentUseCase:
     @staticmethod
-    def execute(template_name: str, data: Any):
-        template = ReadTemplate(template_path='service/templates').get_data_from_template(f'{template_name}')
+    def execute(template_name: str, template_path: str, file_format: str, file_name: str, data: dict) -> None:
+        template = ReadTemplate(template_path=template_path)
+        template_data = template.get_data_from_template(f'{template_name}')
 
         writer.save_data(
-            file_name='heh', file_format='md', data=template.render(**data), file_folder='results',
+            file_name=file_name, file_format=file_format, data=template_data.render(**data), file_folder='results',
         )
+
+
+class DataBaseDataExampleUseCase:
+    """
+    Получение примеров данных, содержащихся в таблице
+    """
+    pass

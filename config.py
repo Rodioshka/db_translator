@@ -10,6 +10,14 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 
 
 @dataclass(frozen=True)
+class DocumentConfig:
+    DOCUMENT_NAME: str = 'Отчет'
+    DOCUMENT_TEMPLATE: str = 'markdown_template.md_tmp'
+    DOCUMENT_EXT: str = 'md'
+    DOCUMENT_TEMPLATE_PATH: str = 'service/templates'
+
+
+@dataclass(frozen=True)
 class DataBaseConfig:
     DB_TYPE: DataBasesTypesEnum
 

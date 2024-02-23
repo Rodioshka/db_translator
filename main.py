@@ -1,4 +1,4 @@
-from config import DataBaseConfig
+from config import DataBaseConfig, DocumentConfig
 
 from usecases.types import DataBasesTypesEnum
 from usecases.usecases import DataBaseStructureUseCase, CreateDocumentUseCase
@@ -14,7 +14,15 @@ def main() -> None:
 
     dbs = DataBaseStructureUseCase(interface=db_interface)
     dbs.execute()
-    CreateDocumentUseCase.execute(template_name='markdown_template.md_tmp', data=dbs.data)
+
+    document_wrk = CreateDocumentUseCase()
+    document_wrk.execute(
+        template_name=DocumentConfig.DOCUMENT_TEMPLATE,
+        template_path=DocumentConfig.DOCUMENT_TEMPLATE_PATH,
+        file_name=DocumentConfig.DOCUMENT_NAME,
+        file_format=DocumentConfig.DOCUMENT_EXT,
+        data=dbs.data
+    )
 
 
 if __name__ == '__main__':
