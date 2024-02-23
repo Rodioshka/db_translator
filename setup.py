@@ -1,13 +1,11 @@
 from setuptools import setup, find_packages
 
-
-
 if __name__ == '__main__':
     setup(
         name='db_translator',
         version='0.0.1',
         author='rodya',
-        packages=find_packages(),
+        packages=find_packages(include=['db','db*', 'usecases', 'usecases*']),
         include_package_data=True,
         install_requires=[
             'greenlet == 3.0.3',
