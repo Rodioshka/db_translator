@@ -42,26 +42,29 @@ class DataBaseStructureUseCase:
 
     @staticmethod
     def get_column_relationship(column_name: str, relationships: List[dict]) -> tuple:
-        if len(relationships) > 0:
-            for value in relationships:
-                if column_name in value.get('constrained_columns'):
-                    return (
-                        value.get('referred_table'),
-                        value.get('referred_columns')
-                    )
-                else:
-                    return (None, None)
-        else:
-            return (None, None)
+        for value in relationships:
+            if column_name in value.get('constrained_columns'):
+                return (
+                    value.get('referred_table'),
+                    value.get('referred_columns')
+                )
 
     @staticmethod
     def get_table_columns(columns: List[dict], relationships: List[dict]) -> list:
         data_columns = list()
         for column in columns:
-            ref_table, ref_columns = DataBaseStructureUseCase.get_column_relationship(
-                column_name=column.get('name'),
-                relationships=relationships
-            )
+
+            ref_table = None
+            ref_columns = None
+
+            for value in relationships:
+                if column.get('name') in value.get('constrained_columns'):
+                    ref_table, ref_columns = (
+                        value.get('referred_table'),
+                        value.get('referred_columns')
+                    )
+
+            # print(ref_table, ref_columns)
 
             data_columns.append(
                 Column(
