@@ -11,7 +11,7 @@ class DataBaseStructureUseCase:
         self.data['meta'] = {
             'created_dt': datetime.datetime.now()
         }
-
+    # TODO: Надо еще добавить в сами данные индексы и pk
     def execute(self) -> None:
         schemes = self.interface.get_schemes()
         data = list()
