@@ -23,10 +23,17 @@ class DataBaseStructureUseCase:
                     columns = self.interface.get_columns(table_name=table, schema_name=schema)
                     table_references = self.interface.get_fk(table_name=table, schema_name=schema)
                     table_description = self.interface.get_table_description(table_name=table, schema_name=schema)
+                    table_pkey_constrains = self.interface.get_pk_constraint(table_name=table, schema_name=schema)
+                    table_pkey_index, table_pkey_columns = table_pkey_constrains.get('name'), table_pkey_constrains.get(
+                        'constrained_columns')
+                    table_indexes = self.interface.get_indexes(table_name=table, schema_name=schema)
 
                     tb_columns = self.get_table_columns(
                         columns=columns,
-                        relationships=table_references
+                        relationships=table_references,
+                        table_indexes=table_indexes,
+                        table_pkey_index=table_pkey_index,
+                        table_pkey_columns=table_pkey_columns
                     )
 
                     data.append(
@@ -40,22 +47,19 @@ class DataBaseStructureUseCase:
                     )
         self.data['data'] = data
 
-    @staticmethod
-    def get_column_relationship(column_name: str, relationships: List[dict]) -> tuple:
-        for value in relationships:
-            if column_name in value.get('constrained_columns'):
-                return (
-                    value.get('referred_table'),
-                    value.get('referred_columns')
-                )
 
     @staticmethod
-    def get_table_columns(columns: List[dict], relationships: List[dict]) -> list:
+    def get_table_columns(columns: List[dict], relationships: List[dict], table_pkey_index: str = None,
+                          table_pkey_columns: list = None, table_indexes: list = None) -> list:
         data_columns = list()
         for column in columns:
 
             ref_table = None
             ref_columns = None
+            is_index = False
+            is_pk = False
+            index_name = None
+            is_unique_index = None
 
             for value in relationships:
                 if column.get('name') in value.get('constrained_columns'):
@@ -64,7 +68,17 @@ class DataBaseStructureUseCase:
                         value.get('referred_columns')
                     )
 
-            # print(ref_table, ref_columns)
+            if table_pkey_columns:
+                if column.get('name') in table_pkey_columns:
+                    is_pk = True
+
+            if table_indexes:
+                for index in table_indexes:
+                    if column.get('name') in index.get('column_names', None):
+                        is_index = True
+                        index_name = index.get('name', None)
+                        is_unique_index = index.get('unique', None)
+
 
             data_columns.append(
                 Column(
@@ -78,9 +92,3 @@ class DataBaseStructureUseCase:
             )
         return data_columns
 
-
-class DataBaseDataExampleUseCase:
-    """
-    Получение примеров данных, содержащихся в таблице
-    """
-    pass

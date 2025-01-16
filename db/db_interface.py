@@ -22,3 +22,12 @@ class DataBaseInterface:
 
     def get_fk(self, table_name: str, schema_name: str = 'public'):
         return inspect(self.engine).get_foreign_keys(schema=schema_name, table_name=table_name)
+
+    def get_indexes(self, table_name: str, schema_name: str = 'public'):
+        return inspect(self.engine).get_indexes(schema=schema_name, table_name=table_name)
+
+    def get_multi_check_constraints(self, table_name: str, schema_name: str = 'public'):
+        return inspect(self.engine).get_multi_check_constraints(schema=schema_name, table_name=table_name)
+
+    def get_pk_constraint(self, table_name: str, schema_name: str = 'public'):
+        return inspect(self.engine).get_pk_constraint(schema=schema_name, table_name=table_name)
