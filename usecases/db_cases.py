@@ -1,5 +1,6 @@
 from typing import List
 import datetime
+from dataclasses import asdict
 from usecases.types import Column, Table
 from db.db_interface import DataBaseInterface
 
@@ -9,7 +10,7 @@ class DataBaseStructureUseCase:
         self.interface = interface
         self.data = dict()
         self.data['meta'] = {
-            'created_dt': datetime.datetime.now()
+            'created_dt': datetime.datetime.now().isoformat()
         }
     # TODO: Надо еще добавить в сами данные индексы и pk
     def execute(self) -> None:
@@ -27,7 +28,6 @@ class DataBaseStructureUseCase:
                     table_pkey_index, table_pkey_columns = table_pkey_constrains.get('name'), table_pkey_constrains.get(
                         'constrained_columns')
                     table_indexes = self.interface.get_indexes(table_name=table, schema_name=schema)
-
                     tb_columns = self.get_table_columns(
                         columns=columns,
                         relationships=table_references,
@@ -37,13 +37,13 @@ class DataBaseStructureUseCase:
                     )
 
                     data.append(
-                        Table(
+                        asdict(Table(
                             schema_name=schema,
                             table_name=table,
                             table_description=table_description.get('text'),
-                            columns=tb_columns
-
-                        )
+                            columns=tb_columns,
+                            table_indexes=table_indexes
+                        ))
                     )
         self.data['data'] = data
 
@@ -81,13 +81,19 @@ class DataBaseStructureUseCase:
 
 
             data_columns.append(
-                Column(
-                    column_name=column.get('name'),
-                    column_type=column.get('type'),
-                    column_description=column.get('comment'),
-                    nullable=column.get('nullable'),
-                    ref_table=ref_table,
-                    ref_columns=ref_columns,
+                asdict(
+                    Column(
+                        column_name=column.get('name'),
+                        column_type=str(column.get('type')),
+                        column_description=column.get('comment'),
+                        nullable=column.get('nullable'),
+                        ref_table=ref_table,
+                        ref_columns=ref_columns,
+                        is_index=is_index,
+                        index_name=index_name,
+                        is_unique_index=is_unique_index,
+                        is_pk=is_pk
+                    )
                 )
             )
         return data_columns

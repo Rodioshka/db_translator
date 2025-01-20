@@ -1,3 +1,5 @@
+import json
+
 from config import DataBaseConfig, DocumentConfig
 
 from usecases.types import DataBasesTypesEnum
@@ -15,6 +17,9 @@ def main() -> None:
 
     dbs = DataBaseStructureUseCase(interface=db_interface)
     dbs.execute()
+    # Сохранение словаря в файл
+    with open('results/data.json', 'w', encoding='utf-8') as f:
+        json.dump(dbs.data, f, ensure_ascii=False, indent=4)
 
     document_wrk = CreateDocumentUseCase()
     document_wrk.execute(
